@@ -44,7 +44,7 @@ export default {
 
 			console.info(meta);
 
-			return Response.json(JSON.parse(results), { status: 200, headers: { ...corsHeaders } });
+			return Response.json(results, { status: 200, headers: { ...corsHeaders } });
 		}
 
 		if (path === '/save' && method.toUpperCase() === 'POST') {
