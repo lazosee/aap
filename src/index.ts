@@ -50,7 +50,7 @@ export default {
 		if (path === '/save' && method.toUpperCase() === 'POST') {
 			const data: Product = await request.json();
 
-			const res = await env.DB.prepare(
+			const { meta, results, success, error } = await env.DB.prepare(
 				`
 				INSERT INTO amazon_products (asin, title, image_url, product_url, price, rating, reviews_count, attributes)
 				VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -69,7 +69,11 @@ export default {
 				)
 				.run();
 
-			return Response.json(res, { status: 201, headers: { ...corsHeaders } });
+			if (error || !success) {
+				return Response.json({ error, success }, { status: 500, headers: { ...corsHeaders } });
+			}
+
+			return Response.json({ success, results, meta, error }, { status: 201, headers: { ...corsHeaders } });
 		}
 
 		return new Response('Hello World!', { status: 200, headers: { ...corsHeaders } });
