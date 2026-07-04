@@ -11,13 +11,32 @@
 		"enabled": true,
 	},
 	"upload_source_maps": true,
-	"compatibility_flags": ["nodejs_compat"],
-	"d1_databases": [{ "binding": "DB", "database_name": "amazon-affiliate", "database_id": "a549473b-cb30-4a34-a501-8e878d98cf1b" }],
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "amazon-affiliate",
+			"database_id": "a549473b-cb30-4a34-a501-8e878d98cf1b"
+		}
+	],
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
 	 */
-	// "placement": {  "mode": "smart" }
+	"placement": {
+		"mode": "smart"
+	},
+	"routes": [
+		{
+			"pattern": "aap.lazaroosee.xyz",
+			"zone_name": "lazaroosee.xyz",
+			"custom_domain": true,
+			"enabled": true,
+			"previews_enabled": false
+		}
+	],
 	/**
 	 * Bindings
 	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including

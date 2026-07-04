@@ -13,10 +13,23 @@
 
 import { Product } from './types';
 
+const corsHeaders = {
+	'Access-Control-Allow-Origin': '*', // Change '*' to 'chrome-extension://<your-extension-id>' for strict security
+	'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+	'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
 		const path = new URL(request.url).pathname;
 		const method = request.method;
+
+		// 1. Handle CORS preflight requests
+		if (method.toUpperCase() === 'OPTIONS') {
+			return new Response(null, {
+				headers: corsHeaders,
+			});
+		}
 
 		if (path === '/products') {
 			const limit = new URL(request.url).searchParams.get('count');
@@ -26,12 +39,12 @@ export default {
 			).all();
 
 			if (error || !success) {
-				return Response.json({ error }, { status: 500 });
+				return Response.json({ error }, { status: 500, headers: { ...corsHeaders } });
 			}
 
 			console.info(meta);
 
-			return Response.json(results, { status: 200 });
+			return Response.json(results, { status: 200, headers: { ...corsHeaders } });
 		}
 
 		if (path === '/save' && method.toUpperCase() === 'POST') {
@@ -57,6 +70,6 @@ export default {
 				.run();
 		}
 
-		return new Response('Hello World!');
+		return new Response('Hello World!', { status: 200, headers: { ...corsHeaders } });
 	},
 } satisfies ExportedHandler<Env>;
